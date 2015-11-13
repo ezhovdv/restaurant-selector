@@ -31,10 +31,7 @@ public class Restaurant {
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "restaurantId") Long id;
 	private @Nonnull @Column(nullable = false, length = 128, unique = true) String name;
 
-//	@JoinColumn(name = "menuItemId", referencedColumnName = "restaurantId")
 	private @Nonnull @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true) Set<MenuItem> menuItems = new HashSet<>();
-//	@JsonManagedReference
-//	@JsonBackReference
 	private @OneToMany(mappedBy = "restaurant", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true) List<Vote> votes = new LinkedList<>();
 
 	public Restaurant(final String name, final Set<MenuItem> menuItems) {

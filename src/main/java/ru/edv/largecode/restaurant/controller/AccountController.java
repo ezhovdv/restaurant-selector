@@ -20,6 +20,7 @@ import ru.edv.largecode.restaurant.repository.AccountRepository;
 @RestController
 @RequestMapping(AccountController.BASE_PATH)
 public class AccountController {
+	static final String ADMIN = "/admin!";
 	static final String BASE_PATH = "api/v1/account";
 	private final AccountRepository repo;
 
@@ -31,19 +32,36 @@ public class AccountController {
 	@JsonView(View.Public.class)
 	@RequestMapping(method = RequestMethod.GET)
 	public Set<AccountDto> findAll() {
+		return selectAllAccounts();
+	}
+
+	@JsonView(View.Internal.class)
+	@RequestMapping(value = ADMIN, method = RequestMethod.GET)
+	public Set<AccountDto> findAllForAdmin() {
+		return selectAllAccounts();
+	}
+
+	@JsonView(View.Public.class)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public AccountDto findById(@PathVariable final Long id) {
+		final Account dao = repo.findOne(id);
+		return AccountDto.fromDao(dao);
+	}
+
+	@JsonView(View.Internal.class)
+	@RequestMapping(value = ADMIN + "/{id}", method = RequestMethod.GET)
+	public AccountDto findByIdForAdmin(@PathVariable final Long id) {
+		final Account dao = repo.findOne(id);
+		return AccountDto.fromDao(dao);
+	}
+
+	private Set<AccountDto> selectAllAccounts() {
 		final Set<Account> daos = repo.findAll();
 		final Set<AccountDto> dtos = new HashSet<>();
 		daos.forEach((item) -> {
 			dtos.add(AccountDto.fromDao(item));
 		});
 		return dtos;
-	}
-
-	@JsonView(View.Public.class)
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public AccountDto findOne(@PathVariable final Long id) {
-		final Account dao = repo.findOne(id);
-		return AccountDto.fromDao(dao);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)

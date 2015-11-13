@@ -28,6 +28,7 @@ import ru.edv.largecode.restaurant.repository.RestaurantRepository;
 @RequestMapping(RestaurantController.BASE_PATH)
 public class RestaurantController {
 	static final String BASE_PATH = "api/v1/restaurant";
+	static final String DETAILS = "/details!";
 	private final RestaurantRepository repo;
 
 	@Autowired
@@ -64,19 +65,27 @@ public class RestaurantController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	@JsonView(View.Internal.class)
+	@JsonView(View.Public.class)
 	public Set<RestaurantDto> findAll() {
-		final Set<Restaurant> daos = repo.findAll();
-		final Set<RestaurantDto> dtos = new HashSet<>(daos.size());
-		daos.forEach((item) -> {
-			dtos.add(RestaurantDto.fromDao(item));
-		});
-		return dtos;
+		return selectAll();
+	}
+
+	@RequestMapping(value = DETAILS, method = RequestMethod.GET)
+	@JsonView(View.Detail.class)
+	public Set<RestaurantDto> findAllWithDetails() {
+		return selectAll();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@JsonView(View.Public.class)
-	public RestaurantDto findOne(@PathVariable final Long id) {
+	public RestaurantDto findById(@PathVariable final Long id) {
+		final Restaurant restaurant = repo.findOne(id);
+		return RestaurantDto.fromDao(restaurant);
+	}
+
+	@RequestMapping(value = DETAILS + "/{id}", method = RequestMethod.GET)
+	@JsonView(View.Detail.class)
+	public RestaurantDto findByIdWithDetails(@PathVariable final Long id) {
 		final Restaurant restaurant = repo.findOne(id);
 		return RestaurantDto.fromDao(restaurant);
 	}
@@ -88,5 +97,14 @@ public class RestaurantController {
 		restoraunt.setId(id);
 		final Restaurant dao = repo.save(restoraunt);
 		return RestaurantDto.fromDao(dao);
+	}
+
+	private Set<RestaurantDto> selectAll() {
+		final Set<Restaurant> daos = repo.findAll();
+		final Set<RestaurantDto> dtos = new HashSet<>(daos.size());
+		daos.forEach((item) -> {
+			dtos.add(RestaurantDto.fromDao(item));
+		});
+		return dtos;
 	}
 }

@@ -9,12 +9,15 @@ import ru.edv.largecode.restaurant.dao.Account;
 
 public interface AccountRepository extends Repository<Account, Long> {
 	@PreAuthorize(SecurityRules.ROLE_ADMIN)
-	Set<Account> findAll();
+	void deleteAll();
 
 	@PreAuthorize(SecurityRules.ROLE_USER)
+	Set<Account> findAll();
+
+//	@PreAuthorize(SecurityRules.ROLE_ADMIN)
 	Account findByUsername(String username);
 
-	@PreAuthorize(SecurityRules.ROLE_ADMIN)
+	@PreAuthorize(SecurityRules.ROLE_USER)
 	Account findOne(Long id);
 
 	@PreAuthorize(SecurityRules.ROLE_ADMIN)

@@ -57,7 +57,7 @@ public class RestaurantApplication {
 			if (null != account) {
 				return new User(username, account.getPassword(), getGrantedAuthorities(username));
 			} else {
-				throw new UsernameNotFoundException("Username " + username + " not found");
+				throw new UsernameNotFoundException("AUTHORIZATION failed: Username " + username + " not found");
 			}
 		}
 	}
