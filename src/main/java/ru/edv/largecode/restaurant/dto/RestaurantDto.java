@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import ru.edv.largecode.restaurant.dao.MenuItem;
 import ru.edv.largecode.restaurant.dao.Restaurant;
 
@@ -17,22 +18,22 @@ import ru.edv.largecode.restaurant.dao.Restaurant;
 @EqualsAndHashCode(of = { "id", "name" })
 @NoArgsConstructor
 public class RestaurantDto {
-	public static RestaurantDto fromDao(@Nonnull final Restaurant dao) {
+	public static RestaurantDto fromDao(@Nonnull @NonNull final Restaurant restoraunt) {
 		final RestaurantDto dto = new RestaurantDto();
-		dto.setId(dao.getId());
-		dto.setName(dao.getName());
+		dto.setId(restoraunt.getId());
+		dto.setName(restoraunt.getName());
 		final Set<MenuItemDto> items = dto.getItems();
-		dao.getMenuItems().forEach((menuItem) -> items.add(MenuItemDto.fromDao(menuItem)));
+		restoraunt.getMenuItems().forEach((menuItem) -> items.add(MenuItemDto.fromDao(menuItem)));
 
 		final Set<String> votes = dto.getVotes();
-		dao.getVotes().forEach((item) -> {
+		restoraunt.getVotes().forEach((item) -> {
 			votes.add(item.getAccount().getUsername());
 		});
 
 		return dto;
 	}
 
-	public static Restaurant toDao(@Nonnull final RestaurantDto dto) {
+	public static Restaurant toDao(@Nonnull @NonNull final RestaurantDto dto) {
 		final Restaurant dao = new Restaurant();
 		dao.setName(dto.getName());
 		final Set<MenuItem> items = dao.getMenuItems();

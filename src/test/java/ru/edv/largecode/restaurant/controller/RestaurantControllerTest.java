@@ -74,7 +74,7 @@ public class RestaurantControllerTest {
 
 	@Test
 	public void findByIdWithDetails() {
-		final RestaurantDto item = fetch(BASE_PATH + DETAILS + "/1");
+		final RestaurantDto item = fetch(BASE_PATH + "/1" + DETAILS);
 		assertTrue(!item.getVotes().isEmpty());
 	}
 }

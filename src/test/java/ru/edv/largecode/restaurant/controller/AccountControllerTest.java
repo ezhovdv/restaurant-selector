@@ -74,7 +74,7 @@ public class AccountControllerTest {
 
 	@Test
 	public void findByIdForAdmin() {
-		final AccountDto account = fetch(BASE_PATH + ADMIN + "/1");
+		final AccountDto account = fetch(BASE_PATH + "/1" + ADMIN);
 		assertNotNull(account.getPassword());
 	}
 }

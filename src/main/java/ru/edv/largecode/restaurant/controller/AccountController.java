@@ -49,9 +49,17 @@ public class AccountController {
 	}
 
 	@JsonView(View.Internal.class)
-	@RequestMapping(value = ADMIN + "/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}" + ADMIN, method = RequestMethod.GET)
 	public AccountDto findByIdForAdmin(@PathVariable final Long id) {
 		final Account dao = repo.findOne(id);
+		return AccountDto.fromDao(dao);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
+	public AccountDto save(@RequestBody final AccountDto dto, @PathVariable final Long id) {
+		final Account account = AccountDto.toDao(dto);
+		account.setId(id);
+		final Account dao = repo.save(account);
 		return AccountDto.fromDao(dao);
 	}
 
@@ -62,13 +70,5 @@ public class AccountController {
 			dtos.add(AccountDto.fromDao(item));
 		});
 		return dtos;
-	}
-
-	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
-	public AccountDto save(@RequestBody final AccountDto dto, @PathVariable final Long id) {
-		final Account account = AccountDto.toDao(dto);
-		account.setId(id);
-		final Account dao = repo.save(account);
-		return AccountDto.fromDao(dao);
 	}
 }

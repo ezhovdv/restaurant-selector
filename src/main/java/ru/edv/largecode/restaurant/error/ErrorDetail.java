@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class ErrorDetail {
 	public static final String INTEGRITY_VIOLATION = "Integrity violation";
-	public static final String EMPTY_REQUEST_DATA = "Data is not found";
 	public static final String CONSTRAINT_VIOLATION = "Errors in request data";
+	public static final String NOT_FOUND = "Data is not found";
 
 	private int status;
 	private String description;

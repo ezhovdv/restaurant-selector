@@ -47,7 +47,7 @@ public class VoteController {
 	public ErrorDetail errorNPE(final HttpServletRequest request, final Exception exception) {
 		final ErrorDetail error = new ErrorDetail();
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
-		error.setDescription(ErrorDetail.EMPTY_REQUEST_DATA);
+		error.setDescription(ErrorDetail.NOT_FOUND);
 		error.setMessage(exception.getLocalizedMessage());
 		error.setUrl(request.getRequestURL().toString());
 		return error;

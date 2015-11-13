@@ -64,6 +64,16 @@ public class RestaurantController {
 		return error;
 	}
 
+	@ExceptionHandler(NullPointerException.class)
+	public ErrorDetail errorNPE(final HttpServletRequest request, final Exception exception) {
+		final ErrorDetail error = new ErrorDetail();
+		error.setStatus(HttpStatus.BAD_REQUEST.value());
+		error.setDescription(ErrorDetail.NOT_FOUND);
+		error.setMessage(exception.getLocalizedMessage());
+		error.setUrl(request.getRequestURL().toString());
+		return error;
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	@JsonView(View.Public.class)
 	public Set<RestaurantDto> findAll() {
@@ -83,7 +93,7 @@ public class RestaurantController {
 		return RestaurantDto.fromDao(restaurant);
 	}
 
-	@RequestMapping(value = DETAILS + "/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}" + DETAILS, method = RequestMethod.GET)
 	@JsonView(View.Detail.class)
 	public RestaurantDto findByIdWithDetails(@PathVariable final Long id) {
 		final Restaurant restaurant = repo.findOne(id);

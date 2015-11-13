@@ -16,12 +16,12 @@ import ru.edv.largecode.restaurant.dao.Vote;
 @EqualsAndHashCode(of = { "username" })
 @NoArgsConstructor
 public class AccountDto {
-	public static AccountDto fromDao(final Account dao) {
+	public static AccountDto fromDao(final Account account) {
 		final AccountDto dto = new AccountDto();
-		dto.setId(dao.getId());
-		dto.setUsername(dao.getUsername());
-		dto.setPassword(dao.getPassword());
-		dto.setVote(dao.getVote());
+		dto.setId(account.getId());
+		dto.setUsername(account.getUsername());
+		dto.setPassword(account.getPassword());
+		dto.setVote(account.getVote());
 		return dto;
 	}
 
