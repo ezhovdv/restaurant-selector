@@ -22,8 +22,9 @@ import ru.edv.largecode.restaurant.repository.RestaurantRepository;
 import ru.edv.largecode.restaurant.repository.VoteRepository;
 
 @RestController
-@RequestMapping("api/v1/vote")
+@RequestMapping(VoteController.PASE_PATH)
 public class VoteController {
+	static final String PASE_PATH = "api/v1/vote";
 	private final VoteRepository repo;
 	private final RestaurantRepository restRepo;
 	private final AccountRepository accRepo;

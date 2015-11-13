@@ -8,18 +8,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import ru.edv.largecode.restaurant.dao.Account;
 
 public interface AccountRepository extends Repository<Account, Long> {
-	String ACCOUNT = "account";
-
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize(SecurityRules.ROLE_ADMIN)
 	Set<Account> findAll();
 
+	@PreAuthorize(SecurityRules.ROLE_USER)
 	Account findByUsername(String username);
 
+	@PreAuthorize(SecurityRules.ROLE_ADMIN)
 	Account findOne(Long id);
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize(SecurityRules.ROLE_ADMIN)
 	Account save(Account account);
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize(SecurityRules.ROLE_ADMIN)
 	Account saveAndFlush(Account account);
 }

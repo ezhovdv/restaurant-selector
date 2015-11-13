@@ -50,6 +50,6 @@ public class RestaurantDto {
 	private @Nonnull String name;
 	@JsonView(View.Public.class)
 	private Set<MenuItemDto> items = new HashSet<>();
-	@JsonView(View.Internal.class)
+	@JsonView(View.Detail.class)
 	private Set<String> votes = new HashSet<>();
 }

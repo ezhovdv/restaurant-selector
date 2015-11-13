@@ -25,8 +25,9 @@ import ru.edv.largecode.restaurant.error.ErrorDetail;
 import ru.edv.largecode.restaurant.repository.RestaurantRepository;
 
 @RestController
-@RequestMapping("api/v1/restaurant")
+@RequestMapping(RestaurantController.BASE_PATH)
 public class RestaurantController {
+	static final String BASE_PATH = "api/v1/restaurant";
 	private final RestaurantRepository repo;
 
 	@Autowired

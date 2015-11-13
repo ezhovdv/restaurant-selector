@@ -18,8 +18,9 @@ import ru.edv.largecode.restaurant.dto.View;
 import ru.edv.largecode.restaurant.repository.AccountRepository;
 
 @RestController
-@RequestMapping("api/v1/account")
+@RequestMapping(AccountController.BASE_PATH)
 public class AccountController {
+	static final String BASE_PATH = "api/v1/account";
 	private final AccountRepository repo;
 
 	@Autowired

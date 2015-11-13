@@ -40,6 +40,6 @@ public class AccountDto {
 	@JsonView(View.Internal.class)
 	@Pattern(regexp = "^[A-Za-z\\s-]+$", message = "Username must contain letters, spaces or dashes")
 	private @Nonnull String password;
-	@JsonView(View.Internal.class)
+	@JsonView(View.Detail.class)
 	private @Nullable Vote vote;
 }
