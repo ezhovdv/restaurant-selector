@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import ru.edv.largecode.restaurant.RestaurantApplication;
 import ru.edv.largecode.restaurant.dto.RestaurantDto;
+import ru.edv.largecode.restaurant.error.ErrorDetail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { RestaurantApplication.class,
@@ -76,5 +77,15 @@ public class RestaurantControllerTest {
 	public void findByIdWithDetails() {
 		final RestaurantDto item = fetch(BASE_PATH + "/1" + DETAILS);
 		assertTrue(!item.getVotes().isEmpty());
+	}
+
+	@Test
+	public void findByWrongId() {
+		final String path = BASE_PATH + "/500";
+		final ResponseEntity<ErrorDetail> response = rest.getForEntity(path, ErrorDetail.class);
+		assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+
+		final ErrorDetail error = response.getBody();
+		assertNotNull(error);
 	}
 }
