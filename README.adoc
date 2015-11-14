@@ -72,7 +72,7 @@ Unfortunately http://projects.spring.io/spring-data-rest/[spring data REST modul
 
 == Swagger integration
 
-You can try to test REST interface via web interface: 
+You can try to test REST interface via web interface (unfortunately you can't setup user/password for authentication...) 
 
 * http://localhost:8888/swagger-ui.html[Swagger2 integration endpoint] 
 * http://localhost:8888/v2/api-docs[Swagger2 service documentation]

@@ -1,7 +1,6 @@
 package ru.edv.largecode.restaurant;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -33,7 +32,6 @@ import org.springframework.security.web.header.writers.frameoptions.WhiteListedA
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.async.DeferredResult;
 
 import com.fasterxml.classmate.TypeResolver;
 
@@ -44,12 +42,9 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
-import springfox.documentation.schema.WildcardType;
-import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -116,6 +111,8 @@ public class RestaurantApplication {
 
 	}
 
+	private static final String API_ROOT_REGEX = "/api/v1/\\w+(/[\\w,!]+)*";
+
 	public static void main(final String[] args) {
 		SpringApplication.run(RestaurantApplication.class, args);
 	}
@@ -123,9 +120,9 @@ public class RestaurantApplication {
 	@Autowired
 	private TypeResolver typeResolver;
 
-	private ApiKey apiKey() {
-		return new ApiKey("mykey", "api_key", "header");
-	}
+//	private ApiKey apiKey() {
+//		return new ApiKey("mykey", "api_key", "header");
+//	}
 
 	List<SecurityReference> defaultAuth() {
 		final AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
@@ -145,21 +142,21 @@ public class RestaurantApplication {
 	@Bean
 	public Docket restaurantSelectorApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.any()).build().pathMapping("/")
+				.paths(PathSelectors.regex(API_ROOT_REGEX)).build().pathMapping("/")
 				.directModelSubstitute(LocalDate.class, String.class).genericModelSubstitutes(ResponseEntity.class)
-				.alternateTypeRules(newRule(
-						typeResolver.resolve(DeferredResult.class,
-								typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-						typeResolver.resolve(WildcardType.class)))
+				//				.alternateTypeRules(newRule(
+				//						typeResolver.resolve(DeferredResult.class,
+				//								typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
+				//						typeResolver.resolve(WildcardType.class)))
 				.useDefaultResponseMessages(false)
-				.globalResponseMessage(RequestMethod.GET,
-						newArrayList(new ResponseMessageBuilder().code(500).message("500 message")
-								.responseModel(new ModelRef("Error")).build()))
-				.securitySchemes(newArrayList(apiKey())).securityContexts(newArrayList(securityContext()));
+				.globalResponseMessage(RequestMethod.GET, newArrayList(new ResponseMessageBuilder().code(500)
+						.message("500 message").responseModel(new ModelRef("Error")).build()))
+//				.securitySchemes(newArrayList(apiKey())).securityContexts(newArrayList(securityContext()))
+						;
 	}
 
-	private SecurityContext securityContext() {
-		return SecurityContext.builder().securityReferences(defaultAuth()).forPaths(PathSelectors.regex("/anyPath.*"))
-				.build();
-	}
+//	private SecurityContext securityContext() {
+//		return SecurityContext.builder().securityReferences(defaultAuth()).forPaths(PathSelectors.regex("/anyPath.*"))
+//				.build();
+//	}
 }
