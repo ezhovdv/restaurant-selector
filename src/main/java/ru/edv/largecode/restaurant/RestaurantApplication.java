@@ -1,7 +1,12 @@
 package ru.edv.largecode.restaurant;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static springfox.documentation.schema.AlternateTypeRules.newRule;
+
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Priority;
 
@@ -13,6 +18,7 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,12 +32,29 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.async.DeferredResult;
+
+import com.fasterxml.classmate.TypeResolver;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.edv.largecode.restaurant.dao.Account;
 import ru.edv.largecode.restaurant.repository.AccountRepository;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.schema.WildcardType;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+@EnableSwagger2
 @Slf4j
 public class RestaurantApplication {
 	@Service
@@ -97,6 +120,20 @@ public class RestaurantApplication {
 		SpringApplication.run(RestaurantApplication.class, args);
 	}
 
+	@Autowired
+	private TypeResolver typeResolver;
+
+	private ApiKey apiKey() {
+		return new ApiKey("mykey", "api_key", "header");
+	}
+
+	List<SecurityReference> defaultAuth() {
+		final AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+		final AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+		authorizationScopes[0] = authorizationScope;
+		return newArrayList(new SecurityReference("mykey", authorizationScopes));
+	}
+
 	@Bean
 	public ServletRegistrationBean h2servletRegistration() {
 		final ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
@@ -105,4 +142,24 @@ public class RestaurantApplication {
 		return registration;
 	}
 
+	@Bean
+	public Docket restaurantSelectorApi() {
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
+				.paths(PathSelectors.any()).build().pathMapping("/")
+				.directModelSubstitute(LocalDate.class, String.class).genericModelSubstitutes(ResponseEntity.class)
+				.alternateTypeRules(newRule(
+						typeResolver.resolve(DeferredResult.class,
+								typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
+						typeResolver.resolve(WildcardType.class)))
+				.useDefaultResponseMessages(false)
+				.globalResponseMessage(RequestMethod.GET,
+						newArrayList(new ResponseMessageBuilder().code(500).message("500 message")
+								.responseModel(new ModelRef("Error")).build()))
+				.securitySchemes(newArrayList(apiKey())).securityContexts(newArrayList(securityContext()));
+	}
+
+	private SecurityContext securityContext() {
+		return SecurityContext.builder().securityReferences(defaultAuth()).forPaths(PathSelectors.regex("/anyPath.*"))
+				.build();
+	}
 }
