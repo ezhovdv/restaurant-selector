@@ -10,7 +10,10 @@ import ru.edv.largecode.restaurant.dao.Restaurant;
 
 public interface RestaurantRepository extends Repository<Restaurant, Long> {
 	@PreAuthorize(SecurityRules.ROLE_ADMIN)
-	void delete(Restaurant restaurant);
+	void delete(Long id);
+
+//	@PreAuthorize(SecurityRules.ROLE_ADMIN)
+//	void deleteAll();
 
 	@PreAuthorize(SecurityRules.ROLE_USER)
 	Set<Restaurant> findAll();

@@ -45,6 +45,16 @@ public class RestaurantController {
 		return RestaurantDto.fromDao(dao);
 	}
 
+	@RequestMapping(value = "/{id", method = RequestMethod.DELETE)
+	void deleteById(@PathVariable final Long id) {
+		repo.delete(id);
+	}
+
+//	@RequestMapping(value = "all", method = RequestMethod.DELETE)
+//	void deleteAll() {
+//		repo.deleteAll();
+//	}
+
 	@ResponseStatus(value = HttpStatus.CONFLICT, reason = ErrorDetail.CONSTRAINT_VIOLATION)
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ErrorDetail errorCVE(final HttpServletRequest request, final Exception exception) {
@@ -104,7 +114,7 @@ public class RestaurantController {
 		return RestaurantDto.fromDao(restaurant);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@JsonView(View.Internal.class)
 	public RestaurantDto save(@RequestBody final RestaurantDto dto, @PathVariable final Long id) {
 		final Restaurant restoraunt = RestaurantDto.toDao(dto);
