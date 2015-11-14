@@ -70,6 +70,13 @@ I tried to imitate `@Projection` annotation behavour (declared in http://project
 
 Unfortunately http://projects.spring.io/spring-data-rest/[spring data REST module] is not suitable for this project (I got severe problems while trying to use `@Projection` functionality and remove collection links)
 
+== Swagger integration
+
+You can try to test REST interface via web interface: 
+
+* http://localhost:8888/swagger-ui.html[Swagger2 integration endpoint] 
+* http://localhost:8888/v2/api-docs[Swagger2 service documentation]
+
 == Accounts
 
 Base URL is http://localhost:8888/api/v1/account
