@@ -1,0 +1,1 @@
+curl -X GET -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Basic em9vOnBhcms=" -H "Cache-Control: no-cache" -H "Postman-Token: 08f8daa2-4013-f650-c800-33c3c6d05b9d" 'http://localhost:8888/api/v1/restaurant'

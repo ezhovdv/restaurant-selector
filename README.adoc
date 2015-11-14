@@ -1,0 +1,33 @@
+
+= Restaurant selector
+
+This is proof-of-concept project. The main aim is just to show how to create project on Spring Boot stack quickly. 
+
+== Technology stack
+
+The following stack is used:
+
+* `spring-boot-starter-web`, for creating `RestControllers` and fine tuning `Jackson` mapping for DTO objects
+* `spring-boot-starter-data-jpa`, for creating quick database repository services based on Hibernate ORM framework
+* `spring-boot-starter-security`, for separation business logic interactions for different user roles (`USER`, `ADMIN`)
+* `spring-boot-starter-actuator`, as tool to find out what was going wrong see more at `trace` endpoint
+* `h2` database as embedded in-memory database (see more on 
+
+Also some additional libraries has been used:
+
+* `lombok`, for creating dense DAO and DTO objects
+* `guava`, for more easy creation of `Set` and `List` objects
+
+== CURL
+
+=== Get all restaurants
+
+[source,bash]
+include::src\test\resources\curl\restaurants\restaurants-all.txt[]
+
+=== Get all restaurants with details
+
+[source,bash]
+include::src\test\resources\curl\restaurants\restaurants-all-with-details.txt[]
+
+
