@@ -22,12 +22,14 @@ Also some additional libraries has been used:
 
 === Get all restaurants
 
-[source,bash]
-include::src\test\resources\curl\restaurants\restaurants-all.txt[]
+[source]
+----
+include::src/test/resources/curl/restaurants/restaurants-all.txt[]
+----
 
 === Get all restaurants with details
 
-[source,bash]
-include::src\test\resources\curl\restaurants\restaurants-all-with-details.txt[]
-
-
+[source]
+----
+include::src/test/resources/curl/restaurants/restaurants-all-with-details.txt[]
+----
