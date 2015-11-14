@@ -1,9 +1,17 @@
-
 = Restaurant selector
 
-This is proof-of-concept project. The main aim is just to show how to create project on Spring Boot stack quickly. 
+This is proof-of-concept project. The main aim is just to show how to create project on Spring Boot stack quickly.
 
-== Technology stack
+= Requirements
+
+= How to run
+
+.run with spring-boot maven plugin
+
+[source,shell]
+mvn spring-boot:run
+
+= Technology stack
 
 The following stack is used:
 
@@ -11,25 +19,71 @@ The following stack is used:
 * `spring-boot-starter-data-jpa`, for creating quick database repository services based on Hibernate ORM framework
 * `spring-boot-starter-security`, for separation business logic interactions for different user roles (`USER`, `ADMIN`)
 * `spring-boot-starter-actuator`, as tool to find out what was going wrong see more at `trace` endpoint
-* `h2` database as embedded in-memory database (see more on 
+* `spring-boot-starter-test` for integration tests creation
+* `h2` database as embedded in-memory database (see more on `console` endpoint)
 
 Also some additional libraries has been used:
 
 * `lombok`, for creating dense DAO and DTO objects
 * `guava`, for more easy creation of `Set` and `List` objects
 
-== CURL
+= Configuration
 
-=== Get all restaurants
+All configuration options are inside <<src/main/resources/application.properties, `Spring boot` application configuration file>>
 
-[source]
-----
-include::src/test/resources/curl/restaurants/restaurants-all.txt[]
-----
+* default port is 8888
+* management port (for `actuator` endpoints) is 8881
+* `actuator` security has been disabled
+* added H2 console, so you can access to database at http://localhost:8888/console
+* database configuration
+    - in memory
+    - `jdbc:h2:mem:EDV` as `JDBC URL`
+    - don't forget to use zoo/park as username/password pair for `H2 Console` interactions
 
-=== Get all restaurants with details
+= Initial loading
 
-[source]
-----
-include::src/test/resources/curl/restaurants/restaurants-all-with-details.txt[]
-----
+For more details, please, look at <<src\main\java\ru\edv\largecode\restaurant\DatabaseLoader.java, `DatabaseLoader` class>>. It loads several accounts, restoraunts and votes.
+
+= Testing
+
+== Integration tests
+
+This project doesn't have unit tests. Only integration tests were created with the help of `spring-boot-starter-test` module.
+
+== Actuator endpoints
+
+Please look at least at http://localhost:8881/trace to see on latest HTTP communications details
+
+== Curl scripts 
+
+.(unfortunately `include` macro doesn't work at github.com)
+[source,shell]
+include::src\test\resources\curl\restaurants\restaurants-all-with-details.txt[]
+
+Please, see more tests inside link:src/test/resources/curl[this folder]
+
+=== Restaurants
+
+* <<src/test/resources/curl/restaurants/restaurants-all.txt#, Get all restaurants>>
+* <<src/test/resources/curl/restaurants/restaurants-all-with-details.txt#, Get all restaurants with details>>
+* <<src/test/resources/curl/restaurants/restaurant-by-id.txt#, Get restaurant by Id>>
+* <<src/test/resources/curl/restaurants/restaurant-by-id-with-details.txt#, Get restaurant by Id with details>>
+* <<src/test/resources/curl/restaurants/restaurant-by-wrong-id.txt#, Get restaurant by wrong Id>> (we'll get some error response)
+* <<src/test/resources/curl/restaurants/restaurant-update.txt#, Update restaurant by Id>>
+* <<src/test/resources/curl/restaurants/restaurant-add.txt#, Create new  restaurant>>
+* <<src/test/resources/curl/restaurants/restaurant-add-error-menu.txt#, Create new  restaurant with _wrong_ menu>> (menu items can't contain digits)
+
+=== Accounts
+
+* <<src/test/resources/curl/accounts/accounts-all.txt#, Get all accounts>>
+* <<src/test/resources/curl/accounts/accounts-all-for-admin.txt#, Get all accounts with passwords>>
+* <<src/test/resources/curl/accounts/account-by-id.txt#, Get account by Id>>
+* <<src/test/resources/curl/accounts/account-by-id-for-admin.txt#, Get account by Id with password>>
+* <<src/test/resources/curl/accounts/account-edit-by-id.txt#, Update account by Id>>
+* <<src/test/resources/curl/accounts/account-edit-by-wrong-id.txt#, Update account by wrong Id>> (we'll get some error response)
+* <<src/test/resources/curl/accounts/account-add.txt#, Create new account>>
+* <<src/test/resources/curl/accounts/account-delete.txt#, Delete account by Id>>
+
+== Votes
+
+* <<src/test/resources/curl/vote-save.txt#, Update vote>> (please, don't forget about "11:00 rule") 
