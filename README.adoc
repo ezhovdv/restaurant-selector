@@ -29,7 +29,7 @@ Also some additional libraries has been used:
 
 = Configuration
 
-All configuration options are inside <<src/main/resources/application.properties, `Spring boot` application configuration file>>
+All configuration options are inside link:src/main/resources/application.properties[`Spring boot` application configuration file]
 
 * default port is 8888
 * management port (for `actuator` endpoints) is 8881
@@ -42,7 +42,7 @@ All configuration options are inside <<src/main/resources/application.properties
 
 = Initial loading
 
-For more details, please, look at <<src\main\java\ru\edv\largecode\restaurant\DatabaseLoader.java, `DatabaseLoader` class>>. It loads several accounts, restoraunts and votes.
+For more details, please, look at link:src\main\java\ru\edv\largecode\restaurant\DatabaseLoader.java[`DatabaseLoader` class]. It loads several accounts, restoraunts and votes.
 
 = Testing
 
@@ -58,32 +58,32 @@ Please look at least at http://localhost:8881/trace to see on latest HTTP commun
 
 .(unfortunately `include` macro doesn't work at github.com)
 [source,shell]
-include::src\test\resources\curl\restaurants\restaurants-all-with-details.txt[]
+include::src/test/resources/curl/restaurants/restaurants-all-with-details.txt[]
 
 Please, see more tests inside link:src/test/resources/curl[this folder]
 
 === Restaurants
 
-* <<src/test/resources/curl/restaurants/restaurants-all.txt#, Get all restaurants>>
-* <<src/test/resources/curl/restaurants/restaurants-all-with-details.txt#, Get all restaurants with details>>
-* <<src/test/resources/curl/restaurants/restaurant-by-id.txt#, Get restaurant by Id>>
-* <<src/test/resources/curl/restaurants/restaurant-by-id-with-details.txt#, Get restaurant by Id with details>>
-* <<src/test/resources/curl/restaurants/restaurant-by-wrong-id.txt#, Get restaurant by wrong Id>> (we'll get some error response)
-* <<src/test/resources/curl/restaurants/restaurant-update.txt#, Update restaurant by Id>>
-* <<src/test/resources/curl/restaurants/restaurant-add.txt#, Create new  restaurant>>
-* <<src/test/resources/curl/restaurants/restaurant-add-error-menu.txt#, Create new  restaurant with _wrong_ menu>> (menu items can't contain digits)
+* link:src/test/resources/curl/restaurants/restaurants-all.txt[Get all restaurants]
+* link:src/test/resources/curl/restaurants/restaurants-all-with-details.txt[Get all restaurants with details]
+* link:src/test/resources/curl/restaurants/restaurant-by-id.txt[Get restaurant by Id]
+* link:src/test/resources/curl/restaurants/restaurant-by-id-with-details.txt[Get restaurant by Id with details]
+* link:src/test/resources/curl/restaurants/restaurant-by-wrong-id.txt[Get restaurant by wrong Id] (we'll get some error response)
+* link:src/test/resources/curl/restaurants/restaurant-update.txt[Update restaurant by Id]
+* link:src/test/resources/curl/restaurants/restaurant-add.txt[Create new  restaurant]
+* link:src/test/resources/curl/restaurants/restaurant-add-error-menu.txt[Create new  restaurant with _wrong_ menu] (menu items can't contain digits)
 
 === Accounts
 
-* <<src/test/resources/curl/accounts/accounts-all.txt#, Get all accounts>>
-* <<src/test/resources/curl/accounts/accounts-all-for-admin.txt#, Get all accounts with passwords>>
-* <<src/test/resources/curl/accounts/account-by-id.txt#, Get account by Id>>
-* <<src/test/resources/curl/accounts/account-by-id-for-admin.txt#, Get account by Id with password>>
-* <<src/test/resources/curl/accounts/account-edit-by-id.txt#, Update account by Id>>
-* <<src/test/resources/curl/accounts/account-edit-by-wrong-id.txt#, Update account by wrong Id>> (we'll get some error response)
-* <<src/test/resources/curl/accounts/account-add.txt#, Create new account>>
-* <<src/test/resources/curl/accounts/account-delete.txt#, Delete account by Id>>
+* link:src/test/resources/curl/accounts/accounts-all.txt[Get all accounts]
+* link:src/test/resources/curl/accounts/accounts-all-for-admin.txt[Get all accounts with passwords]
+* link:src/test/resources/curl/accounts/account-by-id.txt[Get account by Id]
+* link:src/test/resources/curl/accounts/account-by-id-for-admin.txt[Get account by Id with password]
+* link:src/test/resources/curl/accounts/account-edit-by-id.txt[Update account by Id]
+* link:src/test/resources/curl/accounts/account-edit-by-wrong-id.txt[Update account by wrong Id] (we'll get some error response)
+* link:src/test/resources/curl/accounts/account-add.txt[Create new account]
+* link:src/test/resources/curl/accounts/account-delete.txt[Delete account by Id]
 
 == Votes
 
-* <<src/test/resources/curl/vote-save.txt#, Update vote>> (please, don't forget about "11:00 rule") 
+* link:src/test/resources/curl/vote-save.txt[Update vote] (please, don't forget about "11:00 rule") 
