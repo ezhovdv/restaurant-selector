@@ -11,20 +11,22 @@ This is proof-of-concept project. The main aim is just to show how to create pro
 [source,shell]
 mvn spring-boot:run
 
+It is supposed that you have Java 8 SDK installed, and Apache Maven v. 3.0+ is also configured.
+
 = Technology stack
 
-The following stack is used:
+The following technology stack has been used:
 
 * `spring-boot-starter-web`, for creating `RestControllers` and fine tuning `Jackson` mapping for DTO objects
 * `spring-boot-starter-data-jpa`, for creating quick database repository services based on Hibernate ORM framework
 * `spring-boot-starter-security`, for separation business logic interactions for different user roles (`USER`, `ADMIN`)
-* `spring-boot-starter-actuator`, as tool to find out what was going wrong see more at `trace` endpoint
-* `spring-boot-starter-test` for integration tests creation
+* `spring-boot-starter-actuator`, as tool to find out what was going wrong (see more at http://localhost:8881/trace endpoint)
+* `spring-boot-starter-test` for integration testing
 * `h2` database as embedded in-memory database (see more on `console` endpoint)
 
 Also some additional libraries has been used:
 
-* `lombok`, for creating dense DAO and DTO objects
+* `lombok`, for creating consize and dense DAO and DTO objects
 * `guava`, for more easy creation of `Set` and `List` objects
 
 = Configuration
@@ -43,6 +45,137 @@ All configuration options are inside link:src/main/resources/application.propert
 = Initial loading
 
 For more details, please, look at link:src\main\java\ru\edv\largecode\restaurant\DatabaseLoader.java[`DatabaseLoader` class]. It loads several accounts, restoraunts and votes.
+
+= API
+
+== Basic prinsiples
+
+- using single names for endponts (`account` but not `accounts`);
+- `GET` for selecting data (read-only, without modification interactions)
+- `POST` for creating/inserting new data (`POST` is *not* idempotent)
+- `PUT` for updating already existing elements (`PUT` is declared as idempotent in HTTP specification, so you can send updates more then one times with the same result)
+- `DELETE` for deleting elements (only one element for call)
+
+I removed `DELETE` usage for deleting all elements because I assumed it is too easy to make an irreversible mistake.
+
+== Modificators
+
+I'd like to apply 2 modificators for getting the same response objetcs  with slightly different field sets.
+
+If we add `/admin!` for `account` URLs then we'll be given with `password` and `vote` field values.
+
+If we add `/details!` for `restaurant` URLs then we'll get data on current voting results.
+
+I tried to imitate `@Projection` annotation behavour (declared in http://projects.spring.io/spring-data-rest/[spring data REST module]).
+
+Unfortunately http://projects.spring.io/spring-data-rest/[spring data REST module] is not suitable for this project (I got severe problems while trying to use `@Projection` functionality and remove collection links)
+
+== Accounts
+
+Base URL is http://localhost:8888/api/v1/account
+
+Examples:
+
+[source,http]
+----
+GET /api/v1/account HTTP/1.1
+Host: localhost:8888
+Content-type: application/json
+Accept: application/json
+Authorization: Basic YWRtaW46YWRtaW4=
+----
+
+or 
+
+[source,http]
+----
+PUT /api/v1/account/500 HTTP/1.1
+Host: localhost:8888
+Content-type: application/json
+Accept: application/json
+Authorization: Basic YWRtaW46YWRtaW4=
+
+{
+    "username": "Beavis",
+    "password": "I'm perfect!"
+}
+----
+
+See more examples at <<accounts, curl account testing>>
+
+== Restaurants
+
+Base URL is http://localhost:8888/api/v1/restaurant
+
+Examples:
+
+[source, http]
+----
+GET /api/v1/restaurant/details! HTTP/1.1
+Host: localhost:8888
+Content-type: application/json
+Accept: application/json
+Authorization: Basic em9vOnBhcms=
+
+----
+
+or
+
+[source, http]
+----
+POST /api/v1/restaurant/ HTTP/1.1
+Host: localhost:8888
+Authorization: Basic em9vOnBhcms=
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "HiRest",
+    "items": [
+        {
+            "name": "First menu item",
+            "price": 0.1
+        },
+        {
+            "name": "Second menu item",
+            "price": 0.2
+        }
+    ]
+}
+
+----
+
+See more examples at <<restaurants, curl restaurant testing>>
+
+== Votes
+
+Base URL is http://localhost:8888/api/v1/vote
+
+Example:
+
+[source, http]
+----
+POST /api/v1/vote HTTP/1.1
+Host: localhost:8888
+Content-type: application/json
+Accept: application/json
+Authorization: Basic em9vOnBhcms=
+
+{
+    "accountId": 3,
+    "restaurantId": 2
+}
+
+----
+
+You can only vote for restaurant by using POST on http://localhost:8888/api/v1/vote
+
+NOTE: I use `POST` for voting because re-voting is not idempotent by your requirements.
+
+* we allow 1st vote at any time (for 1st time vote)
+* we won't allow change (_existing)_ vote after 11:00 
+
+See example at <<votes, curl vote test>>
 
 = Testing
 
@@ -63,7 +196,7 @@ include::src/test/resources/curl/restaurants/restaurants-all-with-details.txt[]
 Please, see more tests inside link:src/test/resources/curl[this folder]
 
 === Restaurants
-
+[[restorants]]
 * link:src/test/resources/curl/restaurants/restaurants-all.txt[Get all restaurants]
 * link:src/test/resources/curl/restaurants/restaurants-all-with-details.txt[Get all restaurants with details]
 * link:src/test/resources/curl/restaurants/restaurant-by-id.txt[Get restaurant by Id]
@@ -74,7 +207,7 @@ Please, see more tests inside link:src/test/resources/curl[this folder]
 * link:src/test/resources/curl/restaurants/restaurant-add-error-menu.txt[Create new  restaurant with _wrong_ menu] (menu items can't contain digits)
 
 === Accounts
-
+[[accounts]]
 * link:src/test/resources/curl/accounts/accounts-all.txt[Get all accounts]
 * link:src/test/resources/curl/accounts/accounts-all-for-admin.txt[Get all accounts with passwords]
 * link:src/test/resources/curl/accounts/account-by-id.txt[Get account by Id]
@@ -85,5 +218,5 @@ Please, see more tests inside link:src/test/resources/curl[this folder]
 * link:src/test/resources/curl/accounts/account-delete-by-id.txt[Delete account by Id]
 
 == Votes
-
+[[votes]]
 * link:src/test/resources/curl/vote-save.txt[Update vote] (please, don't forget about "11:00 rule") 
