@@ -82,7 +82,7 @@ Please, see more tests inside link:src/test/resources/curl[this folder]
 * link:src/test/resources/curl/accounts/account-edit-by-id.txt[Update account by Id]
 * link:src/test/resources/curl/accounts/account-edit-by-wrong-id.txt[Update account by wrong Id] (we'll get some error response)
 * link:src/test/resources/curl/accounts/account-add.txt[Create new account]
-* link:src/test/resources/curl/accounts/account-delete.txt[Delete account by Id]
+* link:src/test/resources/curl/accounts/account-delete-by-id.txt[Delete account by Id]
 
 == Votes
 
