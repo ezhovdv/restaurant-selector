@@ -1,0 +1,14 @@
+curl -X POST -H "Authorization: Basic em9vOnBhcms=" -H "Content-Type: application/json" -H "Accept: application/json" -d '{
+    "name": "HiRest",
+    "items": [
+        {
+            "name": "First menu item",
+            "price": 0.1
+        },
+        {
+            "name": "Second menu item",
+            "price": 0.2
+        }
+    ]
+}
+' 'http://localhost:8888/api/v1/restaurant/'

@@ -1,0 +1,5 @@
+curl -X PUT -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Basic YWRtaW46YWRtaW4=" -d '{
+    "username": "Beavis the Great",
+    "password": "I'm perfect!"
+}
+' 'http://localhost:8888/api/v1/account/5'
