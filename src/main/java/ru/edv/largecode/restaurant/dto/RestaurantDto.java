@@ -2,6 +2,7 @@ package ru.edv.largecode.restaurant.dto;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -25,11 +26,8 @@ public class RestaurantDto {
 		final Set<MenuItemDto> items = dto.getItems();
 		restoraunt.getMenuItems().forEach((menuItem) -> items.add(MenuItemDto.fromDao(menuItem)));
 
-		final Set<String> votes = dto.getVotes();
-		restoraunt.getVotes().forEach((item) -> {
-			votes.add(item.getAccount().getUsername());
-		});
-
+		dto.setVotes(restoraunt.getVotes().stream().map((vote) -> vote.getAccount().getUsername())
+				.collect(Collectors.toSet()));
 		return dto;
 	}
 
