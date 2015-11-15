@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.edv.largecode.restaurant.dao.Account;
-import ru.edv.largecode.restaurant.dao.Vote;
 
 @Data
 @EqualsAndHashCode(of = { "username" })
@@ -21,14 +20,14 @@ public class AccountDto {
 		dto.setId(account.getId());
 		dto.setUsername(account.getUsername());
 		dto.setPassword(account.getPassword());
-		dto.setVote(account.getVote());
+		dto.setVote(VoteDto.fromDao(account.getVote()));
 		return dto;
 	}
 
 	public static Account toDao(final AccountDto dto) {
 		final Account dao = new Account(dto.username, dto.getPassword());
 		dao.setId(dto.getId());
-		dao.setVote(dto.getVote());
+		dao.setVote(null);
 		return dao;
 	}
 
@@ -41,5 +40,5 @@ public class AccountDto {
 	@Pattern(regexp = "^[A-Za-z\\s-]+$", message = "Username must contain letters, spaces or dashes")
 	private @Nonnull String password;
 	@JsonView(View.Detail.class)
-	private @Nullable Vote vote;
+	private @Nullable VoteDto vote;
 }

@@ -37,7 +37,7 @@ public class AccountController {
 		this.repo = repo;
 	}
 
-	@JsonView(View.Public.class)
+	@JsonView(View.Internal.class)
 	@RequestMapping(method = RequestMethod.POST)
 	public AccountDto create(@RequestBody final AccountDto dto) {
 		final Account restaurant = AccountDto.toDao(dto);
