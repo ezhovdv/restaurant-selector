@@ -4,14 +4,19 @@ This is proof-of-concept project. The main aim is just to show how to create pro
 
 = Requirements
 
+This project is ordinary Apache Maven project, so as usual you need:
+
+* Java 8 SDK installed, 
+* Apache Maven v. 3.0+ is configured,
+* variables JAVA_HOME is set,
+* `mvn.bat` and JDK utilities are in the system `PATH` variable 
+
 = How to run
 
 .run with spring-boot maven plugin
 
 [source,shell]
 mvn spring-boot:run
-
-It is supposed that you have Java 8 SDK installed, and Apache Maven v. 3.0+ is also configured.
 
 = Technology stack
 
